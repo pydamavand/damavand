@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import pycatch22
 
 def feature_extractor(signals, features):
     """
@@ -100,3 +101,19 @@ def P23(spectrum, freq_axis):
 
 def P24(spectrum, freq_axis):
     return np.mean(np.sqrt(np.subtract(freq_axis, spectral_centroid(spectrum, freq_axis))) * spectrum) / np.sqrt(P17(spectrum, freq_axis))
+
+# Catch-22 feature extraction
+
+def catch_features(df, include_additionals = True):
+  feature_names, feature_values = [], []
+  for index, row in df.iterrows():
+    results = pycatch22.catch22_all(row.to_numpy(), short_names = True)
+
+    if include_additionals:
+
+      results['names'].extend(["DN_Mean", "DN_Spread_Std"])
+      results['values'].extend([np.mean(row.to_numpy()), np.std(row.to_numpy())])
+
+    feature_values.append(results["values"])
+
+  return pd.DataFrame(feature_values, columns=results["names"])
