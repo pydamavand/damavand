@@ -62,9 +62,9 @@ class KAIST:
 				self.data[key].append(temp_df)
 
 class MFPT:
-	def __init__(self, base_directory, folders):
+	def __init__(self, base_directory, files):
 		self.base_dir = base_directory
-		self.folders = folders
+		self.files = files
 
 		self.data = {
 			97656: [],
@@ -101,29 +101,27 @@ class MFPT:
 		None
 		"""
 
-		for folder in self.folders:
-			folder_path = os.path.join(self.base_dir, folder)
-			for file in os.listdir(folder_path):
-				if file.endswith('.mat'):
-					file_path = os.path.join(folder_path, file)
-					mat_data = sio.loadmat(file_path)
-					bearing_data = mat_data['bearing'][0][0]
+		for file in self.files:
+			if file.endswith('.mat'):
+				file_path = os.path.join(self.base_dir, file)
+				mat_data = sio.loadmat(file_path)
+				bearing_data = mat_data['bearing'][0][0]
 
-					if file.startswith('baseline'):
-						Fs, load, rot_speed, signal = bearing_data[0][0][0], bearing_data[2][0][0], bearing_data[3][0][0], bearing_data[1]
-						state = 'Normal'
-					elif file.startswith('OuterRaceFault'):
-						Fs, load, rot_speed, signal = bearing_data[3][0][0], bearing_data[1][0][0], bearing_data[0][0][0], bearing_data[2]
-						state = 'OR'
-					elif file.startswith('InnerRaceFault'):
-						Fs, load, rot_speed, signal = bearing_data[3][0][0], bearing_data[1][0][0], bearing_data[0][0][0], bearing_data[2]
-						state = 'IR'
-					else:
-						continue
+				if file.startswith('baseline'):
+					Fs, load, rot_speed, signal = bearing_data[0][0][0], bearing_data[2][0][0], bearing_data[3][0][0], bearing_data[1]
+					state = 'Normal'
+				elif file.startswith('OuterRaceFault'):
+					Fs, load, rot_speed, signal = bearing_data[3][0][0], bearing_data[1][0][0], bearing_data[0][0][0], bearing_data[2]
+					state = 'OR'
+				elif file.startswith('InnerRaceFault'):
+					Fs, load, rot_speed, signal = bearing_data[3][0][0], bearing_data[1][0][0], bearing_data[0][0][0], bearing_data[2]
+					state = 'IR'
+				else:
+					continue
 
-					temp_df = splitter(signal.reshape(-1), mining_params[Fs]['win_len'], mining_params[Fs]['hop_len'])
-					temp_df['Fs'], temp_df['load'], temp_df['rot_speed'], temp_df['state'] = Fs, load, rot_speed, state
-					self.data[Fs].append(temp_df)
+				temp_df = splitter(signal.reshape(-1), mining_params[Fs]['win_len'], mining_params[Fs]['hop_len'])
+				temp_df['Fs'], temp_df['load'], temp_df['rot_speed'], temp_df['state'] = Fs, load, rot_speed, state
+				self.data[Fs].append(temp_df)
 
 
 
