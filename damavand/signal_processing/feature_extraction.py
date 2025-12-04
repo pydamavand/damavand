@@ -104,15 +104,15 @@ def P24(spectrum, freq_axis):
 
 # Catch-22 feature extraction
 
-def catch_features(df, include_additionals = True):
+def catch22_features(df, include_additionals = False):
   feature_names, feature_values = [], []
   for index, row in df.iterrows():
-    results = pycatch22.catch22_all(row.to_numpy(), short_names = True)
+    results = pycatch22.catch22_all(row.to_numpy(), catch24=include_additionals, short_names = True)
 
-    if include_additionals:
+    # if include_additionals:
 
-      results['names'].extend(["DN_Mean", "DN_Spread_Std"])
-      results['values'].extend([np.mean(row.to_numpy()), np.std(row.to_numpy())])
+    #   results['names'].extend(["DN_Mean", "DN_Spread_Std"])
+    #   results['values'].extend([np.mean(row.to_numpy()), np.std(row.to_numpy())])
 
     feature_values.append(results["values"])
 
