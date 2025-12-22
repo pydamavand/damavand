@@ -2,8 +2,7 @@ certifi==2024.7.4
 charset-normalizer==3.3.2
 idna==3.7
 numpy==1.26.4
-# pandas==2.1.4
-pandas
+pandas==2.1.4
 python-dateutil==2.9.0.post0
 pytz==2024.1
 rarfile==4.2
