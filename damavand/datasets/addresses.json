@@ -214,5 +214,13 @@
         }
     },
     "MEUT": "https://prod-dcd-datasets-cache-zipfiles.s3.eu-west-1.amazonaws.com/fm6xzxnf36-2.zip",
-    "UoO": "https://prod-dcd-datasets-cache-zipfiles.s3.eu-west-1.amazonaws.com/v43hmbwxpm-1.zip"
+    "UoO": "https://prod-dcd-datasets-cache-zipfiles.s3.eu-west-1.amazonaws.com/v43hmbwxpm-1.zip",
+    "XJTU_SU": {
+        "part01": "https://drive.usercontent.google.com/download?id=1ATvZuD6j3bPxhyR07Zm-PURmOC4b4uRn&export=download&authuser=0&confirm=t&uuid=80c200d5-96b7-4a1a-93f4-f53eea37ceb2&at=ALBwUgmPqYypRR1Dah0teTExuKqD:1776013550281",
+        "part02": "https://drive.usercontent.google.com/download?id=162KvWNIpBGtd7EDWo4yP1j5XsaoNHOYU&export=download&authuser=0&confirm=t&uuid=dfef35ed-4665-429c-98f9-0d22ac5f360c&at=ALBwUgm4wHwHVyZFkzkN7NfOA8rx:1776013577451",
+        "part03": "https://drive.usercontent.google.com/download?id=1NvzrGW-KOSy48OZmiFxlE3TPV4CKAcw0&export=download&authuser=0&confirm=t&uuid=bd5593a4-f150-48ea-8c26-70d47da7dac9&at=ALBwUgkq1Y4tcRogt2DPufu25u69:1776013686116",
+        "part04": "https://drive.usercontent.google.com/download?id=1VuQ5-mK11p1S2pTxUZaH_IxOwUlsmN0S&export=download&authuser=0&confirm=t&uuid=fa3b5210-9823-4556-bb49-0073dcfd56cc&at=ALBwUgl7STzKPgPKkKDKRcGFI0p4:1776013750139",
+        "part05": "https://drive.usercontent.google.com/download?id=1WH4OU4MLaMGQkbh6DghxPA5Dwvsq8tEf&export=download&authuser=0&confirm=t&uuid=0724146f-840e-4783-9836-b6bb460ee28d&at=ALBwUgmmsMTI7pj9XUirSizMjgFl:1776013777214",
+        "part06": "https://drive.usercontent.google.com/download?id=1wzQzQUx6-J8DuGczT81OkrkTgOUwL-I_&export=download&authuser=0&confirm=t&uuid=5355aacc-f77d-431f-93a1-7856b4ff97dc&at=ALBwUgnc26TIZC4Yg674c5uCsko8:1776013797285"
+    }
 }

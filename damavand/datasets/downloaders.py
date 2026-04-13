@@ -20,30 +20,30 @@ class ZipDatasetDownloader:
         """
         Initializes the ZipDatasetDownloader with the specified URL.
 
-		Parameters
+                Parameters
         ----------
         url : str
-			The URL of the dataset zip file.
-            
+                        The URL of the dataset zip file.
+
         Attributes
         ----------
-		url : str
-			The URL of the dataset zip file.
+                url : str
+                        The URL of the dataset zip file.
         download_file_name : str
-			The file path where the dataset will be downloaded.
+                        The file path where the dataset will be downloaded.
         extraction_path : str
-			The directory path where the dataset will be extracted.
+                        The directory path where the dataset will be extracted.
         """
         self.url = url
 
     def download(self, download_file_name):
         """
         Downloads the dataset from the source URL into the specified file.
-        
-		Parameters
-		----------
-		download_file_name : str
-			The file path where the dataset will be downloaded.
+
+                Parameters
+                ----------
+                download_file_name : str
+                        The file path where the dataset will be downloaded.
         """
         self.download_file_name = download_file_name
         response = requests.get(self.url)
@@ -54,9 +54,9 @@ class ZipDatasetDownloader:
         """
         Extracts the dataset from the downloaded zip file to the specified path.
 
-		Parameters
-		----------
-		extraction_path : str
+                Parameters
+                ----------
+                extraction_path : str
             The directory path where the dataset will be extracted.
         """
         self.extraction_path = extraction_path
@@ -67,12 +67,12 @@ class ZipDatasetDownloader:
         """
         Downloads the dataset to a specified file and extracts it to a specified path.
 
-		Parameters
-		----------
-		download_file_name : str
-			The file path where the dataset will be downloaded.
-		extraction_path : str
-			The directory path where the dataset will be extracted.
+                Parameters
+                ----------
+                download_file_name : str
+                        The file path where the dataset will be downloaded.
+                extraction_path : str
+                        The directory path where the dataset will be extracted.
         """
         self.download(download_file_name)
         self.extract(extraction_path)
@@ -198,30 +198,30 @@ class CwruDownloader:
 class PuDownloader:
     def __init__(self, files):
         """
-		Initializes the downloader with the specified files.
+        Initializes the downloader with the specified files.
 
-		Parameters
-		----------
-		files : dict
-			A dictionary where keys are file names and values are the download links.
-		"""
+        Parameters
+        ----------
+        files : dict
+                A dictionary where keys are file names and values are the download links.
+        """
         self.files = files
 
     def download(self, download_path, timeout=10):
         """
-		Downloads the dataset files from the specified URLs into the given directory.
+        Downloads the dataset files from the specified URLs into the given directory.
 
-		Parameters
-		----------
-		download_path : str
-			The directory where the downloaded files will be saved.
-		timeout : int, optional
-			The maximum number of seconds to wait for a download to complete. The default is 10 seconds.
+        Parameters
+        ----------
+        download_path : str
+                The directory where the downloaded files will be saved.
+        timeout : int, optional
+                The maximum number of seconds to wait for a download to complete. The default is 10 seconds.
 
-		Notes
-		-----
-		If the specified directory does not exist, it will be created. This method prints the file names as they are downloaded.
-		"""
+        Notes
+        -----
+        If the specified directory does not exist, it will be created. This method prints the file names as they are downloaded.
+        """
         self.download_path = download_path
         if not os.path.exists(self.download_path):
             os.mkdir(self.download_path)
@@ -249,7 +249,6 @@ class PuDownloader:
                     file.extractall(self.extraction_path)
 
     def download_extract(self, download_path, extraction_path, timeout=10):
-
         """
         Downloads the dataset files from the specified URLs into the given directory and extracts them into another directory.
 
@@ -330,7 +329,6 @@ class MaFaulDaDownloader:
                 zObject.extractall(self.extraction_path)
 
     def download_extract(self, download_path, extraction_path):
-
         """
         Downloads the dataset files from the specified URLs into the given directory and extracts them into another directory.
 
@@ -346,4 +344,44 @@ class MaFaulDaDownloader:
         If the specified directories do not exist, they will be created. This method prints the file names as they are downloaded and extracted.
         """
         self.download(download_path)
+        self.extract(extraction_path)
+
+
+class Xjtu_suDownloader:
+    def __init__(self, addresses):
+        self.file_addresses = addresses
+
+    def download(self, download_path, timeout=15):
+        self.download_path = download_path
+        if not os.path.exists(self.download_path):
+            os.makedirs(self.download_path)
+
+        for key, url in self.file_addresses.items():
+            print(f"Downloading: {key}...")
+
+            r = requests.get(url, stream=True, timeout=timeout)
+
+            filename = f"archive.part{key[-2:]}.rar"
+            with open(os.path.join(self.download_path, filename), "wb") as f:
+                for chunk in r.iter_content(chunk_size=32768):
+                    f.write(chunk)
+
+        print("All parts downloaded. Checking sizes...")
+        for f in os.listdir(self.download_path):
+            print(f"{f}: {os.path.getsize(os.path.join(self.download_path, f))} bytes")
+
+    def extract(self, extraction_path):
+        files = sorted(
+            [
+                os.path.join(self.download_path, f)
+                for f in os.listdir(self.download_path)
+                if f.endswith(".rar")
+            ]
+        )
+        with RarFile(files[0]) as rf:
+            rf.extractall(path=extraction_path)
+        print("Done!")
+
+    def download_extract(self, download_path, extraction_path, timeout=15):
+        self.download(download_path, timeout)
         self.extract(extraction_path)
