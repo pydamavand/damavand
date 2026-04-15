@@ -703,7 +703,7 @@ class XJTU_SU:
         base_directory : str
                 The home directory of the dataset.
         loads : list of str
-                The list of loads to include during the mining process; valid choices are: "35Hz12kN", "37.5Hz11kN", "40Hz1kN".
+                The list of loads to include during the mining process; valid choices are: "35Hz12kN", "37.5Hz11kN", "40Hz10kN".
         reps: list of int
                 The list of repetitions to include; valid choices are 1 to 5.
         channels : list of str
@@ -714,7 +714,7 @@ class XJTU_SU:
         base_directory : str
                 The home directory of the dataset.
         loads : list of str
-                The list of loads to include during the mining process; valid choices are: "35Hz12kN", "37.5Hz11kN", "40Hz1kN".
+                The list of loads to include during the mining process; valid choices are: "35Hz12kN", "37.5Hz11kN", "40Hz10kN".
         reps: list of int
                 The list of repetitions to include; valid choices are 1 to 5.
         channels : list of str
@@ -723,7 +723,7 @@ class XJTU_SU:
                 Mined data is organized as a python dictonary whose keys are elements of the `channels`; corresponding values are lists of `pd.DataFrame` objects.
         """
 
-        self.all_loads = ["35Hz12kN", "37.5Hz11kN", "40Hz1kN"]
+        self.all_loads = ["35Hz12kN", "37.5Hz11kN", "40Hz10kN"]
         self.condition_rep_mapping = {
             "35Hz12kN": {
                 "Bearing1_1": "OR",
