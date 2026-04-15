@@ -739,7 +739,7 @@ class XJTU_SU:
                 "Bearing2_4": "OR",
                 "Bearing2_5": "OR",
             },
-            "40Hz1kN": {
+            "40Hz10kN": {
                 "Bearing3_1": "OR",
                 "Bearing3_2": "IR-B-C-OR",
                 "Bearing3_3": "IR",
