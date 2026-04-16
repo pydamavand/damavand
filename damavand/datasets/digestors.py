@@ -793,7 +793,7 @@ class XJTU_SU:
                         temp_df = splitter(
                             df[channel].to_numpy(),
                             mining_params["win_len"],
-                            mining_params["win_len"],
+                            mining_params["hop_len"],
                         )
                         temp_df["load"] = load
                         temp_df["bearing_rep_comb"] = bearing_rep_comb
