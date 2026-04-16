@@ -696,16 +696,16 @@ class PU:
 
 
 class XJTU_SU:
-    def __init__(self, base_directory, loads, reps, channels):
+    def __init__(self, base_directory, directories_to_include, channels):
         """
         Parameters
         ----------
         base_directory : str
                 The home directory of the dataset.
-        loads : list of str
-                The list of loads to include during the mining process; valid choices are: "35Hz12kN", "37.5Hz11kN", "40Hz10kN".
-        reps: list of int
-                The list of repetitions to include; valid choices are 1 to 5.
+
+        directories_to_include: list of str
+                The list of directores to include; valid choices are: ["Bearing1_1", "Bearing1_2", "Bearing1_3", "Bearing1_4", "Bearing1_5", "Bearing2_1", "Bearing2_2", "Bearing2_3", "Bearing2_4", "Bearing2_5", "Bearing3_1", "Bearing3_2", "Bearing3_3", "Bearing3_4", "Bearing3_5"]
+
         channels : list of str
                 The list of channels to include; valid choices are: Horizontal_vibration_signals, Vertical_vibration_signals
 
@@ -713,54 +713,98 @@ class XJTU_SU:
         ----------
         base_directory : str
                 The home directory of the dataset.
-        loads : list of str
-                The list of loads to include during the mining process; valid choices are: "35Hz12kN", "37.5Hz11kN", "40Hz10kN".
-        reps: list of int
-                The list of repetitions to include; valid choices are 1 to 5.
+
         channels : list of str
                 The list of channels to include; valid choices are: Horizontal_vibration_signals, Vertical_vibration_signals
+
         data : dict of list of pd.DataFrame
                 Mined data is organized as a python dictonary whose keys are elements of the `channels`; corresponding values are lists of `pd.DataFrame` objects.
         """
 
-        self.all_loads = ["35Hz12kN", "37.5Hz11kN", "40Hz10kN"]
-        self.condition_rep_mapping = {
-            "35Hz12kN": {
-                "Bearing1_1": "OR",
-                "Bearing1_2": "OR",
-                "Bearing1_3": "OR",
-                "Bearing1_4": "C",
-                "Bearing1_5": "IR-OR",
+        self.mapping = {
+            "Bearing1_1": {
+                "load": "35Hz12kN",
+                "rep": 1,
+                "state": "OR",
             },
-            "37.5Hz11kN": {
-                "Bearing2_1": "IR",
-                "Bearing2_2": "OR",
-                "Bearing2_3": "C",
-                "Bearing2_4": "OR",
-                "Bearing2_5": "OR",
+            "Bearing1_2": {
+                "load": "35Hz12kN",
+                "rep": 2,
+                "state": "OR",
             },
-            "40Hz10kN": {
-                "Bearing3_1": "OR",
-                "Bearing3_2": "IR-B-C-OR",
-                "Bearing3_3": "IR",
-                "Bearing3_4": "IR",
-                "Bearing3_5": "OR",
+            "Bearing1_3": {
+                "load": "35Hz12kN",
+                "rep": 3,
+                "state": "OR",
+            },
+            "Bearing1_4": {
+                "load": "35Hz12kN",
+                "rep": 4,
+                "state": "C",
+            },
+            "Bearing1_5": {
+                "load": "35Hz12kN",
+                "rep": 5,
+                "state": "IR-OR",
+            },
+            "Bearing2_1": {
+                "load": "37.5Hz11kN",
+                "rep": 1,
+                "state": "IR",
+            },
+            "Bearing2_2": {
+                "load": "37.5Hz11kN",
+                "rep": 2,
+                "state": "OR",
+            },
+            "Bearing2_3": {
+                "load": "37.5Hz11kN",
+                "rep": 3,
+                "state": "C",
+            },
+            "Bearing2_4": {
+                "load": "37.5Hz11kN",
+                "rep": 4,
+                "state": "OR",
+            },
+            "Bearing2_5": {
+                "load": "37.5Hz11kN",
+                "rep": 5,
+                "state": "OR",
+            },
+            "Bearing3_1": {
+                "load": "40Hz10kN",
+                "rep": 1,
+                "state": "OR",
+            },
+            "Bearing3_2": {
+                "load": "40Hz10kN",
+                "rep": 2,
+                "state": "IR-B-C-OR",
+            },
+            "Bearing3_3": {
+                "load": "40Hz10kN",
+                "rep": 3,
+                "state": "IR",
+            },
+            "Bearing3_4": {
+                "load": "40Hz10kN",
+                "rep": 4,
+                "state": "IR",
+            },
+            "Bearing3_5": {
+                "load": "40Hz10kN",
+                "rep": 5,
+                "state": "OR",
             },
         }
 
         self.base_directory = base_directory
-        self.loads = loads
-        self.reps = reps
+        self.directories_to_include = directories_to_include
         self.channels = channels
 
         self.data = {
-            channel: {
-                load: {
-                    f"Bearing{self.all_loads.index(load) + 1}_{rep}": []
-                    for rep in self.reps
-                }
-                for load in self.loads
-            }
+            channel: {directory: [] for directory in self.directories_to_include}
             for channel in self.channels
         }
 
@@ -773,32 +817,29 @@ class XJTU_SU:
                 A dictionary containing the mining parameters; its keys are `win_len` and `hop_len` - the length of the window and the hop length for the window, respectively.
                 Example is:
                 mining_params = {
-                    "win_len": 10000,
-                    "hop_len": 10000
+                    "win_len": 1000,
+                    "hop_len": 1000
                 }
         """
-        for load in self.loads:
-            for rep in self.reps:
-                bearing_rep_comb = f"Bearing{self.all_loads.index(load) + 1}_{rep}"
-                files = os.listdir(
-                    os.path.join(self.base_directory, load, bearing_rep_comb)
-                )
-                sorted_files = sorted(files, key=lambda x: int(x.split(".")[0]))
-                for file in sorted_files:
-                    file_path = os.path.join(
-                        self.base_directory, load, bearing_rep_comb, file
+        for directory in self.directories_to_include:
+            load = self.mapping[directory]["load"]
+            rep = self.mapping[directory]["rep"]
+            state = self.mapping[directory]["state"]
+            files = os.listdir(os.path.join(self.base_directory, load, directory))
+            sorted_files = sorted(files, key=lambda x: int(x.split(".")[0]))
+            for file in sorted_files:
+                file_path = os.path.join(self.base_directory, load, directory, file)
+                df = pd.read_csv(file_path)
+                for channel in self.channels:
+                    temp_df = splitter(
+                        df[channel].to_numpy(),
+                        mining_params["win_len"],
+                        mining_params["hop_len"],
                     )
-                    df = pd.read_csv(file_path)
-                    for channel in self.channels:
-                        temp_df = splitter(
-                            df[channel].to_numpy(),
-                            mining_params["win_len"],
-                            mining_params["hop_len"],
-                        )
-                        temp_df["load"] = load
-                        temp_df["bearing_rep_comb"] = bearing_rep_comb
-                        temp_df["file"] = file.split(".")[0]
-                        temp_df["state"] = self.condition_rep_mapping[load][
-                            bearing_rep_comb
-                        ]
-                        self.data[channel][load][bearing_rep_comb].append(temp_df)
+                    temp_df["load"] = load
+                    temp_df["bearing_rep_comb"] = directory
+                    temp_df["file"] = file.split(".")[0]
+                    temp_df["state"] = state
+                    self.data[channel][directory].append(temp_df)
+
+            print(f"{directory} is mined.")
