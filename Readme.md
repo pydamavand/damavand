@@ -119,3 +119,16 @@ We highly encourage other developers to help in extending the Damavand, particul
 
 ## Cite
 
+In case of using this package, please consider citing the following article:
+
+```
+@inproceedings{berenji2026evaluation,
+  title={Evaluation of Input Presentation in Transfer Learning for Bearing Fault Detection},
+  author={Berenji, Amirhossein and Nowaczyk, Slawomir and Taghiyarrenani, Zahra and Pashami, Sepideh},
+  booktitle={PHM Society European Conference},
+  volume={9},
+  number={1},
+  pages={1--14},
+  year={2026}
+}
+```
